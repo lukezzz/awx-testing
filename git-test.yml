@@ -6,8 +6,4 @@
   tasks:
     - name: Show application version
       ansible.builtin.debug:
-        msg: "Application version = v1"
-
-    - name: Show Git learning message
-      ansible.builtin.debug:
-        msg: "This playbook came from AWX Project"
+        msg: "Application version = v2"
