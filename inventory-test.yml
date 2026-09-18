@@ -23,3 +23,6 @@
     - name: Show app port
       ansible.builtin.debug:
         var: app_port
+    - name: Inspect all variables for this host
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
