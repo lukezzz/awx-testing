@@ -1,0 +1,29 @@
+---
+- name: Learn AWX inventory and variables
+  hosts: web
+  gather_facts: false
+
+  tasks:
+    - name: Show inventory hostname
+      ansible.builtin.debug:
+        msg: "inventory_hostname = {{ inventory_hostname }}"
+
+    - name: Show connection address
+      ansible.builtin.debug:
+        msg: "ansible_host = {{ ansible_host }}"
+
+    - name: Show company
+      ansible.builtin.debug:
+        msg: "company = {{ company }}"
+
+    - name: Show environment
+      ansible.builtin.debug:
+        msg: "environment = {{ environment }}"
+
+    - name: Show server role
+      ansible.builtin.debug:
+        msg: "server_role = {{ server_role }}"
+
+    - name: Show application port
+      ansible.builtin.debug:
+        msg: "app_port = {{ app_port }}"
