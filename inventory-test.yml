@@ -4,25 +4,19 @@
   gather_facts: false
 
   tasks:
-    - name: Show host
-      ansible.builtin.debug:
-        msg: "inventory_hostname = {{ inventory_hostname }}"
-
-    - name: Show groups
-      ansible.builtin.debug:
-        var: group_names
-
-    - name: Show environment
+    - name: Direct environment
       ansible.builtin.debug:
         var: environment
 
-    - name: Show server role
+    - name: Environment through hostvars
+      ansible.builtin.debug:
+        msg: >-
+          {{ hostvars[inventory_hostname]['environment'] }}
+
+    - name: Server role
       ansible.builtin.debug:
         var: server_role
 
-    - name: Show app port
+    - name: App port
       ansible.builtin.debug:
         var: app_port
-    - name: Inspect all variables for this host
-      ansible.builtin.debug:
-        var: hostvars[inventory_hostname]
