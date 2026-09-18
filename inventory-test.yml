@@ -1,6 +1,6 @@
 ---
 - name: Learn AWX inventory and variables
-  hosts: web
+  hosts: db
   gather_facts: false
 
   tasks:
