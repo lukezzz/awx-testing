@@ -1,0 +1,13 @@
+---
+- name: First AWX Testing playbook
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Print AWX learning message
+      ansible.builtin.debug:
+        msg: "My first custom AWX job is running!"
+
+    - name: Show inventory hostname
+      ansible.builtin.debug:
+        msg: "Current host is {{ inventory_hostname }}"
