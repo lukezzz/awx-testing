@@ -19,3 +19,8 @@
     - name: Show restart variable type
       ansible.builtin.debug:
         msg: "restart_service type = {{ restart_service | type_debug }}"
+
+    - name: Restart application when requested
+      ansible.builtin.debug:
+        msg: "Restart requested for version {{ app_version }}"
+      when: restart_service | bool
