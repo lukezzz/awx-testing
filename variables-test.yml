@@ -1,0 +1,21 @@
+---
+- name: Learn AWX variables
+  hosts: web
+  gather_facts: false
+
+  tasks:
+    - name: Show deployment environment
+      ansible.builtin.debug:
+        msg: "deployment_environment = {{ deployment_environment }}"
+
+    - name: Show application version
+      ansible.builtin.debug:
+        msg: "app_version = {{ app_version }}"
+
+    - name: Show restart option
+      ansible.builtin.debug:
+        msg: "restart_service = {{ restart_service }}"
+
+    - name: Show restart variable type
+      ansible.builtin.debug:
+        msg: "restart_service type = {{ restart_service | type_debug }}"
