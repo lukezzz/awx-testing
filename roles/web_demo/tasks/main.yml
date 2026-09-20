@@ -1,0 +1,21 @@
+---
+- name: Show role execution information
+  ansible.builtin.debug:
+    msg:
+      - "Role = web_demo"
+      - "Host = {{ inventory_hostname }}"
+      - "Environment = {{ web_demo_environment }}"
+      - "Port = {{ web_demo_port }}"
+
+- name: Create AWX role demo directory
+  ansible.builtin.file:
+    path: /tmp/awx-role-demo
+    state: directory
+    mode: "0755"
+
+- name: Deploy configuration from template
+  ansible.builtin.template:
+    src: awx-demo.conf.j2
+    dest: /tmp/awx-role-demo/awx-demo.conf
+    mode: "0644"
+  notify: Configuration changed

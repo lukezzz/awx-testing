@@ -1,0 +1,4 @@
+---
+- name: Configuration changed
+  ansible.builtin.debug:
+    msg: "Configuration changed - a real service could be restarted here"

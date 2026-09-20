@@ -1,0 +1,7 @@
+---
+- name: Deploy web demo
+  hosts: web
+  gather_facts: false
+
+  roles:
+    - web_demo
