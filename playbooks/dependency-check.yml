@@ -7,7 +7,7 @@
   tasks:
     - name: Show Python executable
       ansible.builtin.command:
-        cmd: which python3
+        cmd: python3 -V
       register: python_result
       changed_when: false
 
