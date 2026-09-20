@@ -1,0 +1,23 @@
+---
+- name: Workflow failure handler
+  hosts: web
+  gather_facts: false
+
+  tasks:
+    - name: Display failure information
+      ansible.builtin.debug:
+        msg:
+          - "Workflow verification failed."
+          - "Host = {{ inventory_hostname }}"
+          - "Manual investigation is required."
+
+    - name: Read current application configuration
+      ansible.builtin.command:
+        cmd: cat /tmp/awx-workflow-demo/app.conf
+      register: current_config
+      changed_when: false
+      failed_when: false
+
+    - name: Display current configuration
+      ansible.builtin.debug:
+        var: current_config.stdout_lines

@@ -1,0 +1,22 @@
+---
+- name: Workflow pre-check
+  hosts: web
+  gather_facts: false
+
+  tasks:
+    - name: Check target connectivity
+      ansible.builtin.ping:
+
+    - name: Check available disk space
+      ansible.builtin.command:
+        cmd: df -h /
+      register: disk_result
+      changed_when: false
+
+    - name: Display disk information
+      ansible.builtin.debug:
+        var: disk_result.stdout_lines
+
+    - name: Pre-check completed
+      ansible.builtin.debug:
+        msg: "Pre-check passed on {{ inventory_hostname }}"

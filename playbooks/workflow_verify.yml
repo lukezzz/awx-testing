@@ -1,0 +1,29 @@
+---
+- name: Workflow deployment verification
+  hosts: web
+  gather_facts: false
+
+  tasks:
+    - name: Read deployed configuration
+      ansible.builtin.slurp:
+        src: /tmp/awx-workflow-demo/app.conf
+      register: deployed_config
+
+    - name: Decode configuration
+      ansible.builtin.set_fact:
+        config_content: "{{ deployed_config.content | b64decode }}"
+
+    - name: Display deployed configuration
+      ansible.builtin.debug:
+        var: config_content
+
+    - name: Verify application version
+      ansible.builtin.assert:
+        that:
+          - "'version=' + expected_version in config_content"
+        fail_msg: >-
+          Verification failed.
+          Expected version={{ expected_version }}
+        success_msg: >-
+          Verification passed.
+          version={{ expected_version }}
