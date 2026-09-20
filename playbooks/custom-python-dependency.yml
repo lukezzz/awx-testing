@@ -1,0 +1,21 @@
+---
+- name: Test custom Python dependency
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Import custom Python package
+      ansible.builtin.command:
+        argv:
+          - python3
+          - -c
+          - >-
+            import awx_lab_dependency;
+            print(awx_lab_dependency.identify())
+      register: custom_dependency_result
+      changed_when: false
+
+    - name: Display result
+      ansible.builtin.debug:
+        var: custom_dependency_result.stdout
