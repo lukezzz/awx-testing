@@ -1,0 +1,26 @@
+---
+- name: Check execution environment dependencies
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Show Python executable
+      ansible.builtin.command:
+        cmd: which python3
+      register: python_result
+      changed_when: false
+
+    - name: Display Python executable
+      ansible.builtin.debug:
+        var: python_result.stdout
+
+    - name: Check jmespath
+      ansible.builtin.command:
+        cmd: python3 -c "import jmespath; print(jmespath.__version__)"
+      register: jmespath_result
+      changed_when: false
+
+    - name: Display jmespath
+      ansible.builtin.debug:
+        msg: "jmespath = {{ jmespath_result.stdout }}"
