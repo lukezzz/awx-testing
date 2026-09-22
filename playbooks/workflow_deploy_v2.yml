@@ -1,0 +1,26 @@
+---
+- name: Deploy application from workflow variables
+  hosts: web
+  gather_facts: false
+
+  tasks:
+    - name: Show workflow variables
+      ansible.builtin.debug:
+        msg:
+          - "app_version = {{ app_version }}"
+          - "deployment_environment = {{ deployment_environment }}"
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: /tmp/awx-workflow-demo
+        state: directory
+        mode: "0755"
+
+    - name: Deploy application configuration
+      ansible.builtin.copy:
+        content: |
+          application=awx-workflow-demo
+          version={{ app_version }}
+          environment={{ deployment_environment }}
+        dest: /tmp/awx-workflow-demo/app.conf
+        mode: "0644"
