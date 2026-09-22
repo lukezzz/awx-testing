@@ -1,10 +1,10 @@
 ---
-- name: Verify workflow deployment
+- name: Verify workflow deployment data
   hosts: web
   gather_facts: false
 
   tasks:
-    - name: Read application configuration
+    - name: Read deployed configuration
       ansible.builtin.slurp:
         src: /tmp/awx-workflow-demo/app.conf
       register: deployed_config
@@ -13,16 +13,20 @@
       ansible.builtin.set_fact:
         config_content: "{{ deployed_config.content | b64decode }}"
 
-    - name: Show expected values
+    - name: Show workflow runtime information
       ansible.builtin.debug:
         msg:
-          - "Expected version = {{ app_version }}"
-          - "Expected environment = {{ deployment_environment }}"
+          - "deployment_id = {{ deployment_id }}"
+          - "deployed_version = {{ deployed_version }}"
+          - "environment = {{ deployment_environment }}"
 
-    - name: Verify deployment
+    - name: Verify deployment data
       ansible.builtin.assert:
         that:
-          - "'version=' + app_version in config_content"
+          - "'version=' + deployed_version in config_content"
           - "'environment=' + deployment_environment in config_content"
-        success_msg: "Deployment verification passed"
-        fail_msg: "Deployment verification failed"
+          - "'deployment_id=' + deployment_id in config_content"
+        success_msg: >-
+          Deployment {{ deployment_id }} verified successfully
+        fail_msg: >-
+          Deployment {{ deployment_id }} verification failed

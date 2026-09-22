@@ -1,0 +1,29 @@
+---
+- name: Generate workflow runtime information
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Generate deployment timestamp
+      ansible.builtin.command:
+        cmd: date +%Y%m%d-%H%M%S
+      register: timestamp_result
+      changed_when: false
+
+    - name: Build deployment ID
+      ansible.builtin.set_fact:
+        generated_deployment_id: >-
+          deploy-{{ app_version }}-{{ timestamp_result.stdout }}
+
+    - name: Display generated deployment information
+      ansible.builtin.debug:
+        msg:
+          - "app_version = {{ app_version }}"
+          - "deployment_id = {{ generated_deployment_id }}"
+
+    - name: Publish data to workflow
+      ansible.builtin.set_stats:
+        data:
+          deployment_id: "{{ generated_deployment_id }}"
+          deployed_version: "{{ app_version }}"
