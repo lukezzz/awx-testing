@@ -1,0 +1,29 @@
+---
+- name: Cisco IOS first AWX test
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: Gather minimal Cisco IOS facts
+      cisco.ios.ios_facts:
+        gather_subset:
+          - min
+
+    - name: Display Cisco device information
+      ansible.builtin.debug:
+        msg:
+          - "Inventory host = {{ inventory_hostname }}"
+          - "Hostname = {{ ansible_net_hostname | default('unknown') }}"
+          - "Model = {{ ansible_net_model | default('unknown') }}"
+          - "Serial = {{ ansible_net_serialnum | default('unknown') }}"
+          - "IOS Version = {{ ansible_net_version | default('unknown') }}"
+
+    - name: Run show version
+      cisco.ios.ios_command:
+        commands:
+          - show version
+      register: show_version_result
+
+    - name: Display show version
+      ansible.builtin.debug:
+        var: show_version_result.stdout_lines
