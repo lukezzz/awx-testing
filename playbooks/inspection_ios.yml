@@ -1,0 +1,45 @@
+---
+- name: Inspect Cisco IOS switches
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: Gather IOS facts
+      cisco.ios.ios_facts:
+        gather_subset:
+          - min
+
+    - name: Display device identity
+      ansible.builtin.debug:
+        msg:
+          - "===== DEVICE IDENTITY ====="
+          - "Inventory Host = {{ inventory_hostname }}"
+          - "Hostname = {{ ansible_net_hostname | default('unknown') }}"
+          - "Model = {{ ansible_net_model | default('unknown') }}"
+          - "Serial = {{ ansible_net_serialnum | default('unknown') }}"
+          - "IOS Version = {{ ansible_net_version | default('unknown') }}"
+
+    - name: Run IOS inspection commands
+      cisco.ios.ios_command:
+        commands:
+          - show version
+          - show inventory
+          - show interfaces status
+          - show vlan brief
+      register: ios_inspection_result
+
+    - name: Display show version
+      ansible.builtin.debug:
+        var: ios_inspection_result.stdout_lines[0]
+
+    - name: Display show inventory
+      ansible.builtin.debug:
+        var: ios_inspection_result.stdout_lines[1]
+
+    - name: Display interface status
+      ansible.builtin.debug:
+        var: ios_inspection_result.stdout_lines[2]
+
+    - name: Display VLAN information
+      ansible.builtin.debug:
+        var: ios_inspection_result.stdout_lines[3]
