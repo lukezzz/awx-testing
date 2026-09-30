@@ -1,0 +1,41 @@
+---
+- name: Cisco NX-OS compliance inspection
+  hosts: cisco_nxos
+  gather_facts: false
+
+  tasks:
+    - name: Gather NX-OS facts
+      cisco.nxos.nxos_facts:
+        gather_subset:
+          - min
+
+    - name: Check NX-OS version
+      ansible.builtin.assert:
+        that:
+          - ansible_net_version == expected_os_version
+        success_msg: >-
+          PASS: NX-OS version {{ ansible_net_version }}
+          matches expected version {{ expected_os_version }}
+        fail_msg: >-
+          FAIL: NX-OS version {{ ansible_net_version }}
+          does not match expected version {{ expected_os_version }}
+
+    - name: Check hardware model
+      ansible.builtin.assert:
+        that:
+          - ansible_net_model == expected_model
+        success_msg: >-
+          PASS: Model {{ ansible_net_model }}
+          matches expected model {{ expected_model }}
+        fail_msg: >-
+          FAIL: Model {{ ansible_net_model }}
+          does not match expected model {{ expected_model }}
+
+    - name: Display compliance summary
+      ansible.builtin.debug:
+        msg:
+          - "===== COMPLIANCE SUMMARY ====="
+          - "Device = {{ ansible_net_hostname }}"
+          - "Model = {{ ansible_net_model }}"
+          - "OS Version = {{ ansible_net_version }}"
+          - "Status = PASS"
