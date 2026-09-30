@@ -1,0 +1,19 @@
+---
+- name: Cisco IOS interface compliance
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: Check expected UP interfaces
+      cisco.ios.ios_command:
+        commands:
+          - "show interface {{ item }}"
+      loop: "{{ expected_up_interfaces }}"
+      register: interface_checks
+
+    - name: Display interface check results
+      ansible.builtin.debug:
+        msg:
+          - "Interface = {{ item.item }}"
+          - "{{ item.stdout[0] | regex_search('line protocol is [^\\n]+') }}"
+      loop: "{{ interface_checks.results }}"
