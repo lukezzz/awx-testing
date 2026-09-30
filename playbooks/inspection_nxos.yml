@@ -1,0 +1,45 @@
+---
+- name: Inspect Cisco NX-OS switches
+  hosts: cisco_nxos
+  gather_facts: false
+
+  tasks:
+    - name: Gather NX-OS facts
+      cisco.nxos.nxos_facts:
+        gather_subset:
+          - min
+
+    - name: Display device identity
+      ansible.builtin.debug:
+        msg:
+          - "===== DEVICE IDENTITY ====="
+          - "Inventory Host = {{ inventory_hostname }}"
+          - "Hostname = {{ ansible_net_hostname | default('unknown') }}"
+          - "Model = {{ ansible_net_model | default('unknown') }}"
+          - "Serial = {{ ansible_net_serialnum | default('unknown') }}"
+          - "NX-OS Version = {{ ansible_net_version | default('unknown') }}"
+
+    - name: Run NX-OS inspection commands
+      cisco.nxos.nxos_command:
+        commands:
+          - show version
+          - show inventory
+          - show interface status
+          - show vlan
+      register: nxos_inspection_result
+
+    - name: Display show version
+      ansible.builtin.debug:
+        var: nxos_inspection_result.stdout_lines[0]
+
+    - name: Display show inventory
+      ansible.builtin.debug:
+        var: nxos_inspection_result.stdout_lines[1]
+
+    - name: Display interface status
+      ansible.builtin.debug:
+        var: nxos_inspection_result.stdout_lines[2]
+
+    - name: Display VLAN information
+      ansible.builtin.debug:
+        var: nxos_inspection_result.stdout_lines[3]
