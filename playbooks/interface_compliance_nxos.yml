@@ -11,9 +11,15 @@
       loop: "{{ expected_up_interfaces }}"
       register: interface_checks
 
-    - name: Display interface check results
-      ansible.builtin.debug:
-        msg:
-          - "Interface = {{ item.item }}"
-          - "{{ item.stdout[0] | regex_search('line protocol is [^\\n]+') }}"
+    - name: Validate expected UP interfaces
+      ansible.builtin.assert:
+        that:
+          - "item.stdout_lines[0][0] is regex('^\\S+ is up$')"
+        success_msg: >-
+          PASS: {{ item.item }} is operationally UP
+        fail_msg: >-
+          FAIL: {{ item.item }} is expected UP but is not operationally UP.
+          Actual state: {{ item.stdout_lines[0][0] }}
       loop: "{{ interface_checks.results }}"
+      loop_control:
+        label: "{{ item.item }}"
